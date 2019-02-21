@@ -1,0 +1,29 @@
+Kun Yu
+
+Part 1 -
+I put a break point after the for loop to see if the loop was running correctly. It turns out that it wasn't and that the values weren't updating. Then, I saw in the for loop that the check was i > CAPACITY which would make sense as the result of the bug since the loop would never start since 0 is not greater than 8.
+A fix would be to change the check to:
+i < CAPACITY
+
+Part 2 -
+I put a break point after the for loop again to see if the loop was running correctly. While the loop ran this time, the values of the variables weren't changing. The mistake here was that min_val was set to be 0 at the start of program execution and since 0 is smaller than all the values in the array, it would never get updated. Furthermore, it was assigning the value to max_i instead of min_i.
+A fix would be to change max_i to
+min_i
+and to initialize min_val to the first element of the array or
+min_val = arr[0]
+
+Part 3 -
+I again put a break point before the for loop and saw that it was running. Then I put one after the if statement to see if that was running correctly. It turns out that the program tries to access an element greater than the length of arr and so it becomes nonsense with arr[i+1]. Furtheremore, there is more bracket to contain the statements that are to run after the if statement.
+A fix would be to change the check of the for loop to:
+i < CAPACITY - 1
+and to include brackets between the statements on lines 54-55.
+
+Part 4 -
+I put the breakpoint after the addUp function call and went thorught the function. I noticed a for loop so I set a breakpoint after it and saw that the values were adding incorrectly. I saw that it was summing i rather than arr[i].
+So a fix would be to change sum += i to:
+sum += arr[i]
+
+Part 5 -
+I set a break point after the for loop and saw that it ran. Next I looked at the values and saw that max_i was being set to the values rather than the index.
+So a fix would be to change max_i = arr[i] to:
+max_i = i

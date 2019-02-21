@@ -1,0 +1,10 @@
+std::string line(int l, std::string c);
+std::string alternating_line(int l, std::string x, std::string y);
+std::string alternating_line3x3(int l, std::string x, std::string y);
+std::string box(int w, int h);
+std::string checkerboard(int w, int h);
+std::string cross(int size);
+std::string lower_triangle(int length);
+std::string upper_triangle(int length);
+std::string trapezoid(int w, int h);
+std::string checkerboard3x3 (int w, int h);
