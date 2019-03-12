@@ -1,5 +1,5 @@
 // Kun Yu
-// 
+// Part 1 of Homework
 
 #ifndef SEQUENCE_MAP_H
 #define SEQUENCE_MAP_H
