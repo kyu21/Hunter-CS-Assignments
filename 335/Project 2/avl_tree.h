@@ -186,6 +186,7 @@ class AvlTree
      * x is the item to insert.
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
+     * Merge if node is equal
      */
     void insert( const Comparable & x, AvlNode * & t )
     {
