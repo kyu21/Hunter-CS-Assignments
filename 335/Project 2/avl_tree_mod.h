@@ -3,7 +3,7 @@
 
 #include "dsexceptions.h"
 #include <algorithm>
-#include <iostream>
+#include <iostream> 
 using namespace std;
 
 // AvlTree class
@@ -28,7 +28,7 @@ class AvlTree
   public:
     AvlTree( ) : root{ nullptr }
       { }
-
+    
     AvlTree( const AvlTree & rhs ) : root{ nullptr }
     {
         root = clone( rhs.root );
@@ -38,7 +38,7 @@ class AvlTree
     {
         rhs.root = nullptr;
     }
-
+    
     ~AvlTree( )
     {
         makeEmpty( );
@@ -53,17 +53,17 @@ class AvlTree
         std::swap( *this, copy );
         return *this;
     }
-
+        
     /**
      * Move.
      */
     AvlTree & operator=( AvlTree && rhs )
     {
         std::swap( root, rhs.root );
-
+        
         return *this;
     }
-
+    
     /**
      * Find the smallest item in the tree.
      * Throw UnderflowException if empty.
@@ -89,7 +89,13 @@ class AvlTree
     /**
      * Returns true if x is found in the tree.
      */
-    bool contains( const Comparable & x, int &total_calls ) const {
+    bool contains( const Comparable & x ) const
+    {
+        return contains( x, root );
+    }
+
+    // Overloaded contains function for Part2(b)
+    bool contains( const Comparable & x, int &total_calls) const {
         total_calls++;
         return contains( x, root, total_calls);
     }
@@ -129,7 +135,7 @@ class AvlTree
     {
         insert( x, root );
     }
-
+     
     /**
      * Insert x into the tree; duplicates are ignored.
      */
@@ -137,26 +143,37 @@ class AvlTree
     {
         insert( std::move( x ), root );
     }
-
-    //custom functions created for part 2b
-    Comparable* find(const Comparable &x){
+    
+    // Custom Find function for Part 2(a)
+    Comparable* find(const Comparable &x) {
         return find(x, root);
     }
 
-    int numberOfNodes() const { return numberOfNodes(root); }
+    // Custom Number of Nodes function for Part2(b)
+    int numberOfNodes() const {
+        return numberOfNodes(root);
+    }
 
+    // Custom Internal Path Length function for Part2(b)
     int internalPathLength() const {
         int value = 0;
         return internalPathLength(value, root);
     }
 
-    //original remove function was alternated for the purpose of this project
-    void remove( const Comparable & x, int &total_calls, bool &removed ) {
-        total_calls++;
-        remove( x, root, total_calls, removed);
+    /**
+     * Remove x from the tree. Nothing is done if x is not found.
+     */
+    void remove( const Comparable & x )
+    {
+        remove( x, root );
     }
 
-//modified some
+    // Overloaded removed function for Part2(b)
+    void remove(const Comparable & x, int &total_calls, bool &removed_flag) {
+        total_calls++;
+        remove (x, root, total_calls, removed_flag);
+    }
+
   private:
     struct AvlNode
     {
@@ -167,69 +184,42 @@ class AvlTree
 
         AvlNode( const Comparable & ele, AvlNode *lt, AvlNode *rt, int h = 0 )
           : element{ ele }, left{ lt }, right{ rt }, height{ h } { }
-
+        
         AvlNode( Comparable && ele, AvlNode *lt, AvlNode *rt, int h = 0 )
           : element{ std::move( ele ) }, left{ lt }, right{ rt }, height{ h } { }
     };
 
     AvlNode *root;
 
-    //functions created for 2b
+    // Custom Find Function for Part 2(a)
     Comparable* find(const Comparable & x, AvlNode *t) {
         if( t == nullptr ) {
             return nullptr;
-        } else if( x < t->element){
-            return find( x, t->left);
-        } else if( t->element < x ){
-            return find( x, t->right);
+        } else if( x < t->element) {
+            return find(x, t->left);
+        } else if( t->element < x ) {
+            return find(x, t->right);
         } else {
-            return &(t->element);    // Match
+            return &(t->element);
         }
-     }
+    }
 
-     int numberOfNodes(AvlNode *t) const {
-         if (t == nullptr){
-             return 0;
-         }
-         else {
-            // recursive count, add 1 for the root;
-             return numberOfNodes(t->left) + 1 + numberOfNodes(t->right);
-         }
-     }
+    // Custom Number of Nodes function for Part2(b)
+    int numberOfNodes(AvlNode *t) const {
+        if (t == nullptr) {
+            return 0;
+        }
+        else {
+            return 1 + numberOfNodes(t->left) + numberOfNodes(t->right);
+        }
+    }
 
-     int internalPathLength(int value, AvlNode *t) const {
-         if(t == nullptr){
-             return 0;
-         }
-         return value + internalPathLength(value+1, t->left) + internalPathLength(value+1, t->right);
-     }
-
-     //original remove function alternated for the purpose of this project
-     void remove( const Comparable & x, AvlNode * & t, int &total_calls, bool &removed ) {
-        if( t == nullptr )
-            return;   // Item not found; do nothing
-        if( x < t->element ) {
-            total_calls++;
-            remove( x, t->left, total_calls, removed);
+    // Custom Internal Path Length function for Part2(b)
+    int internalPathLength(int value, AvlNode *t) const {
+        if(t == nullptr){
+            return 0;
         }
-        else if( t->element < x ) {
-            total_calls++;
-            remove( x, t->right, total_calls,removed);
-        }
-        //two children
-        else if( t->left != nullptr && t->right != nullptr) {
-            total_calls++;
-            t->element = findMin( t->right )->element;
-            remove( t->element, t->right, total_calls,removed);
-        }
-        else
-        {
-            AvlNode *oldNode = t;
-            t = ( t->left != nullptr ) ? t->left : t->right;
-            delete oldNode;
-            removed = true;
-        }
-        balance(t);
+        return value + internalPathLength(value + 1, t->left) + internalPathLength(value + 1, t->right);
     }
 
     /**
@@ -237,7 +227,6 @@ class AvlTree
      * x is the item to insert.
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
-     * merge if node is equal
      */
     void insert( const Comparable & x, AvlNode * & t )
     {
@@ -249,7 +238,7 @@ class AvlTree
             insert( x, t->right );
         else
             t->element.merge(x);
-
+        
         balance( t );
     }
 
@@ -258,7 +247,6 @@ class AvlTree
      * x is the item to insert.
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
-     * merge if node is equal
      */
     void insert( Comparable && x, AvlNode * & t )
     {
@@ -268,36 +256,92 @@ class AvlTree
             insert( std::move( x ), t->left );
         else if( t->element < x )
             insert( std::move( x ), t->right );
+        
+        balance( t );
+    }
+     
+    /**
+     * Internal method to remove from a subtree.
+     * x is the item to remove.
+     * t is the node that roots the subtree.
+     * Set the new root of the subtree.
+     */
+    void remove( const Comparable & x, AvlNode * & t )
+    {
+        if( t == nullptr )
+            return;   // Item not found; do nothing
+        
+        if( x < t->element )
+            remove( x, t->left );
+        else if( t->element < x )
+            remove( x, t->right );
+        else if( t->left != nullptr && t->right != nullptr ) // Two children
+        {
+            t->element = findMin( t->right )->element;
+            remove( t->element, t->right );
+        }
         else
-            t->element.merge(x);
-
+        {
+            AvlNode *oldNode = t;
+            t = ( t->left != nullptr ) ? t->left : t->right;
+            delete oldNode;
+        }
+        
         balance( t );
     }
 
-     const int ALLOWED_IMBALANCE = 1;
+    // Overloaded remove function for Part2(b)
+    void remove( const Comparable & x, AvlNode * & t, int &total_calls, bool &removed_flag) {
+        if( t == nullptr )
+            return;   // Item not found; do nothing
+        
+        if( x < t->element ) {
+            total_calls++;
+            remove( x, t->left , total_calls, removed_flag);
+        }
+        else if( t->element < x ) {
+            total_calls++;
+            remove( x, t->right , total_calls, removed_flag);
+        }
+        else if( t->left != nullptr && t->right != nullptr ) // Two children
+        {
+            total_calls++;
+            t->element = findMin( t->right )->element;
+            remove( t->element, t->right , total_calls,removed_flag);
+        }
+        else
+        {
+            AvlNode *oldNode = t;
+            t = ( t->left != nullptr ) ? t->left : t->right;
+            delete oldNode;
+            removed_flag = true;
+        }
+        
+        balance( t );        
+    }
+    
+    static const int ALLOWED_IMBALANCE = 1;
+
     // Assume t is balanced or within one of being balanced
     void balance( AvlNode * & t )
     {
         if( t == nullptr )
             return;
-
-        if( height( t->left ) - height( t->right ) > ALLOWED_IMBALANCE ){
+        
+        if( height( t->left ) - height( t->right ) > ALLOWED_IMBALANCE ) {
             if( height( t->left->left ) >= height( t->left->right ) )
                 rotateWithLeftChild( t );
             else
                 doubleWithLeftChild( t );
-            }
-        else if( height( t->right ) - height( t->left ) > ALLOWED_IMBALANCE ){
-            if( height( t->right->right ) >= height( t->right->left ) ){
+        } else if( height( t->right ) - height( t->left ) > ALLOWED_IMBALANCE ) {
+            if( height( t->right->right ) >= height( t->right->left ) )
                 rotateWithRightChild( t );
-            }
-            else {
+            else
                 doubleWithRightChild( t );
-            }
-        }
+	}
         t->height = max( height( t->left ), height( t->right ) ) + 1;
     }
-
+    
     /**
      * Internal method to find the smallest item in a subtree t.
      * Return node containing the smallest item.
@@ -323,24 +367,38 @@ class AvlTree
         return t;
     }
 
+
     /**
      * Internal method to test if an item is in a subtree.
      * x is item to search for.
      * t is the node that roots the tree.
      */
-     bool contains( const Comparable & x, AvlNode *t, int &total_calls) const {
-         if( t == nullptr ){
-             return false;
-         } else if( x < t->element ){
-             total_calls++;
-             return contains( x, t->left, total_calls);
-         } else if( t->element < x ){
-             total_calls++;
-             return contains( x, t->right, total_calls );
-         } else {
-             return true;    // Match
-         }
-     }
+    bool contains( const Comparable & x, AvlNode *t ) const
+    {
+        if( t == nullptr )
+            return false;
+        else if( x < t->element )
+            return contains( x, t->left );
+        else if( t->element < x )
+            return contains( x, t->right );
+        else
+            return true;    // Match
+    }
+
+    bool contains( const Comparable & x, AvlNode *t, int &total_calls) const {
+        if( t == nullptr )
+            return false;
+        else if( x < t->element ) {
+            total_calls++;
+            return contains( x, t->left, total_calls);
+        }
+        else if( t->element < x ) {
+            total_calls++;
+            return contains( x, t->right, total_calls);
+        }
+        else
+            return true;    // Match
+    }
 /****** NONRECURSIVE VERSION*************************
     bool contains( const Comparable & x, AvlNode *t ) const
     {
@@ -443,10 +501,24 @@ class AvlTree
      * For AVL trees, this is a double rotation for case 2.
      * Update heights, then set new root.
      */
-    void doubleWithLeftChild( AvlNode * & k3 )
+    void doubleWithLeftChild( AvlNode * & k )
     {
-        rotateWithRightChild( k3->left );
-        rotateWithLeftChild( k3 );
+        // rotateWithRightChild( k->left );
+        AvlNode *k1 = k->left;
+        AvlNode *k2 = k1->right;
+        k1->right = k2->left;
+        k2->left = k1;
+        k1->height = max( height( k1->left ), height( k1->right ) ) + 1;
+        k2->height = max( height( k2->right ), k1->height ) + 1;
+        k1 = k2;
+
+        // rotateWithLeftChild( k );
+        k2 = k1->left;
+        k1->left = k2->right;
+        k2->right = k1;
+        k1->height = max( height( k1->left ), height( k1->right ) ) + 1;
+        k2->height = max( height( k2->left ), k1->height ) + 1;
+        k1 = k2;
     }
 
     /**
@@ -455,12 +527,24 @@ class AvlTree
      * For AVL trees, this is a double rotation for case 3.
      * Update heights, then set new root.
      */
-    void doubleWithRightChild( AvlNode * & k1 )
+    void doubleWithRightChild( AvlNode * & k )
     {
-        rotateWithLeftChild( k1->right );
-        rotateWithRightChild( k1 );
+        // rotateWithLeftChild( k->right );
+        AvlNode *k2 = k->right;
+        AvlNode *k1 = k2->left;
+        k2->left = k1->right;
+        k1->right = k2;
+        k2->height = max( height( k2->left ), height( k2->right ) ) + 1;
+        k1->height = max( height( k1->left ), k2->height ) + 1;
+        k2 = k1;
+        // rotateWithRightChild( k );
+        k1 = k2->right;
+        k2->right = k1->left;
+        k1->left = k2;
+        k2->height = max( height( k2->left ), height( k2->right ) ) + 1;
+        k1->height = max( height( k1->right ), k2->height ) + 1;
+        k2 = k1;
     }
-
 };
 
 #endif

@@ -94,6 +94,12 @@ class AvlTree
         return contains( x, root );
     }
 
+    // Overloaded contains function for Part2(b)
+    bool contains( const Comparable & x, int &total_calls) const {
+        total_calls++;
+        return contains( x, root, total_calls);
+    }
+
     /**
      * Test if the tree is logically empty.
      * Return true if empty, false otherwise.
@@ -143,12 +149,29 @@ class AvlTree
         return find(x, root);
     }
 
+    // Custom Number of Nodes function for Part2(b)
+    int numberOfNodes() const {
+        return numberOfNodes(root);
+    }
+
+    // Custom Internal Path Length function for Part2(b)
+    int internalPathLength() const {
+        int value = 0;
+        return internalPathLength(value, root);
+    }
+
     /**
      * Remove x from the tree. Nothing is done if x is not found.
      */
     void remove( const Comparable & x )
     {
         remove( x, root );
+    }
+
+    // Overloaded removed function for Part2(b)
+    void remove(const Comparable & x, int &total_calls, bool &removed_flag) {
+        total_calls++;
+        remove (x, root, total_calls, removed_flag);
     }
 
   private:
@@ -179,6 +202,24 @@ class AvlTree
         } else {
             return &(t->element);
         }
+    }
+
+    // Custom Number of Nodes function for Part2(b)
+    int numberOfNodes(AvlNode *t) const {
+        if (t == nullptr) {
+            return 0;
+        }
+        else {
+            return 1 + numberOfNodes(t->left) + numberOfNodes(t->right);
+        }
+    }
+
+    // Custom Internal Path Length function for Part2(b)
+    int internalPathLength(int value, AvlNode *t) const {
+        if(t == nullptr){
+            return 0;
+        }
+        return value + internalPathLength(value + 1, t->left) + internalPathLength(value + 1, t->right);
     }
 
     /**
@@ -248,6 +289,36 @@ class AvlTree
         
         balance( t );
     }
+
+    // Overloaded remove function for Part2(b)
+    void remove( const Comparable & x, AvlNode * & t, int &total_calls, bool &removed_flag) {
+        if( t == nullptr )
+            return;   // Item not found; do nothing
+        
+        if( x < t->element ) {
+            total_calls++;
+            remove( x, t->left , total_calls, removed_flag);
+        }
+        else if( t->element < x ) {
+            total_calls++;
+            remove( x, t->right , total_calls, removed_flag);
+        }
+        else if( t->left != nullptr && t->right != nullptr ) // Two children
+        {
+            total_calls++;
+            t->element = findMin( t->right )->element;
+            remove( t->element, t->right , total_calls,removed_flag);
+        }
+        else
+        {
+            AvlNode *oldNode = t;
+            t = ( t->left != nullptr ) ? t->left : t->right;
+            delete oldNode;
+            removed_flag = true;
+        }
+        
+        balance( t );        
+    }
     
     static const int ALLOWED_IMBALANCE = 1;
 
@@ -310,6 +381,21 @@ class AvlTree
             return contains( x, t->left );
         else if( t->element < x )
             return contains( x, t->right );
+        else
+            return true;    // Match
+    }
+
+    bool contains( const Comparable & x, AvlNode *t, int &total_calls) const {
+        if( t == nullptr )
+            return false;
+        else if( x < t->element ) {
+            total_calls++;
+            return contains( x, t->left, total_calls);
+        }
+        else if( t->element < x ) {
+            total_calls++;
+            return contains( x, t->right, total_calls);
+        }
         else
             return true;    // Match
     }

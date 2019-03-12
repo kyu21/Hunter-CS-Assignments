@@ -14,13 +14,13 @@ namespace {
 // Returns enzyme acronym from line
 // Modifies db_line to be the part without the enzyme acronym
 string GetEnzymeAcronym(string &db_line) {
-  // Finds index of first /
-  size_t slash_index = db_line.find("/");
-  // Substring from start to first / is the enzyme acronym
-  string an_enz_acro = db_line.substr(0, slash_index);
-  // Discards enzyme acronym since it got parsed
-  db_line = db_line.substr(slash_index + 1);
-  return an_enz_acro;
+	// Finds index of first /
+	size_t slash_index = db_line.find("/");
+	// Substring from start to first / is the enzyme acronym
+	string an_enz_acro = db_line.substr(0, slash_index);
+	// Discards enzyme acronym since it got parsed
+	db_line = db_line.substr(slash_index + 1);
+  	return an_enz_acro;
 }
 
 // Param : a line from the database, an empty string
@@ -62,15 +62,15 @@ void QueryTreeInput(TreeType &a_tree) {
 //  empty.
 template <typename TreeType>
 void QueryTree(const string &db_filename, TreeType &a_tree) {
-  // Code for running Part2(a)
-  string db_line;
-  ifstream db_file;
-  db_file.open(db_filename);
+	// Code for running Part2(a)
+	string db_line;
+	ifstream db_file;
+	db_file.open(db_filename);
 
-  if (db_file.fail()) {
+	if (db_file.fail()) {
 		cout << "Unable to open file\n";
 		exit(1);
-  }
+	}
 	// Ignore first 10 lines of rebase210.txt which arent sequences
 	for (int i = 0; i < 10; ++i) {
 		getline(db_file, db_line);
@@ -94,14 +94,14 @@ void QueryTree(const string &db_filename, TreeType &a_tree) {
 
 int
 main(int argc, char **argv) {
-  if (argc != 2) {
-	cout << "Usage: " << argv[0] << " <databasefilename>" << endl;
-	return 0;
-  }
-  const string db_filename(argv[1]);
-  cout << "Input filename is " << db_filename << endl;
-  // Note that you will replace AvlTree<int> with AvlTree<SequenceMap>
-  AvlTree<SequenceMap> a_tree;
-  QueryTree(db_filename, a_tree);
-  return 0;
+	if (argc != 2) {
+		cout << "Usage: " << argv[0] << " <databasefilename>" << endl;
+		return 0;
+  	}
+  	const string db_filename(argv[1]);
+  	cout << "Input filename is " << db_filename << endl;
+  	// Note that you will replace AvlTree<int> with AvlTree<SequenceMap>
+  	AvlTree<SequenceMap> a_tree;
+  	QueryTree(db_filename, a_tree);
+  	return 0;
 }
