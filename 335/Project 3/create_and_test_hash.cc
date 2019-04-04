@@ -18,8 +18,10 @@ void TestFunctionForHashTable(HashTableType &hash_table, const string &words_fil
 	cout << "Query filename: " << query_filename << endl;
 	hash_table.MakeEmpty();
 
+	// rests num_collisions to 0
 	hash_table.resetNumCollisions();
 
+	// opens words file
 	ifstream words_file;
 	string words_line;
 
@@ -30,19 +32,24 @@ void TestFunctionForHashTable(HashTableType &hash_table, const string &words_fil
 		exit(1);
 	}
 
+	// hashes words into hash table
 	while (getline(words_file, words_line))
 	{
 		hash_table.Insert(words_line);
 	}
 
+	// Calculate statistics
 	cout << "Collisions: " << hash_table.getNumCollisions() << endl;
 	cout << "Number of items: " << hash_table.getNumElements() << endl;
 	cout << "Size of hash table: " << hash_table.getHashTableSize() << endl;
 	cout << "Load factor: " << (hash_table.getNumElements()) / ((double)hash_table.getHashTableSize()) << endl;
 	cout << "Avg. number of collisions: " << (hash_table.getNumCollisions()) / ((double)hash_table.getNumElements()) << endl;
+	cout << endl;
 
+	// Rests collisions to 0
 	hash_table.resetNumCollisions();
 
+	// Opens files for words to query
 	ifstream query_file;
 	string query_line;
 
@@ -53,8 +60,10 @@ void TestFunctionForHashTable(HashTableType &hash_table, const string &words_fil
 		exit(1);
 	}
 
+	// Looks for words in query file
 	while (getline(query_file, query_line))
 	{
+		// +1, because it took num_collisions + 1 more hash to find/not find it
 		if (hash_table.Contains(query_line))
 		{
 			cout << query_line << ": Found in " << hash_table.getNumCollisions() + 1 << " probes" << endl;
@@ -67,6 +76,7 @@ void TestFunctionForHashTable(HashTableType &hash_table, const string &words_fil
 		}
 	}
 
+	// close files
 	words_file.close();
 	query_file.close();
 }

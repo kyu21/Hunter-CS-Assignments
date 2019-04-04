@@ -166,7 +166,7 @@ class HashTableDouble
     size_t InternalHashDouble(const HashedObj &x) const
     {
         static std::hash<HashedObj> hf;
-        int r = 225;
+        int r = 89;
         return (r - (hf(x)) % r) % array_.size();
     }
 };

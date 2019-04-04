@@ -8,7 +8,7 @@
 #include <string>
 using namespace std;
 
-string RemovePunctuation(const string &word, bool hasApostrophe)
+string RemovePunctuation(const string &word, bool &hasApostrophe)
 {
 	string new_word = "";
 
@@ -21,7 +21,7 @@ string RemovePunctuation(const string &word, bool hasApostrophe)
 		}
 
 		l = tolower(l);
-		if ((l >= 'a') && (l <= 'z'))
+		if (((l >= 'a') && (l <= 'z')) || l == '-')
 		{
 			new_word += l;
 		}
@@ -71,8 +71,22 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 		bool hasApostrophe = false;
 		string word_to_lookup = RemovePunctuation(document_word, hasApostrophe);
 
+		vector<string> candidates;
+
 		// Skips word if it has an apostrophe
 		if (hasApostrophe)
+		{
+			continue;
+		}
+
+		// Skips word if its an empty string (i.e. was a number)
+		if (word_to_lookup == "")
+		{
+			continue;
+		}
+
+		// Skips "i" because its a correct word
+		if (word_to_lookup == "i")
 		{
 			continue;
 		}
@@ -91,7 +105,8 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 
 					if (hash_table.Contains(changed_word))
 					{
-						cout << word_to_lookup << " -> " << changed_word << endl;
+						candidates.push_back(changed_word);
+						// cout << word_to_lookup << " -> " << changed_word << " (Case 1)" << endl;
 					}
 					// reseting word to try again with next character
 					changed_word = word_to_lookup;
@@ -108,7 +123,8 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 
 				if (hash_table.Contains(changed_word))
 				{
-					cout << word_to_lookup << " -> " << changed_word << endl;
+					candidates.push_back(changed_word);
+					// cout << word_to_lookup << " -> " << changed_word << " (Case 2)" << endl;
 				}
 				// reseting word to try again with next character
 				changed_word = word_to_lookup;
@@ -124,11 +140,25 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 
 				if (hash_table.Contains(changed_word))
 				{
-					cout << word_to_lookup << " -> " << changed_word << endl;
+					candidates.push_back(changed_word);
+					// cout << word_to_lookup << " -> " << changed_word << " (Case 3)" << endl;
 				}
 				// reseting word to try again with next pair
 				changed_word = word_to_lookup;
 			}
+		}
+		// Remove duplicate alternative spellings
+		candidates.erase(unique(candidates.begin(), candidates.end()), candidates.end());
+
+		if (candidates.size() > 0)
+		{
+			// Prints list of candidate corrections
+			cout << word_to_lookup << " -> ";
+			for (auto word : candidates)
+			{
+				cout << "(" << word << ") ";
+			}
+			cout << endl;
 		}
 	} // end while loop
 }
