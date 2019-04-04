@@ -54,6 +54,8 @@ zucchiniaa: Not found in 1 probes
 lwa: Not found in 2 probes
 panacea: Found in 1 probes
 pnca: Not found in 1 probes
+
+
 DOUBLE HASHING ——>
 ./CreateAndTestHash words.txt query_words.txt double
 Input words file is words.txt, and query file is query_words.txt
