@@ -69,6 +69,8 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 		hash_table.Insert(dictionary_line);
 	}
 
+	cout << "\nPossible Misspelled Words with Candidate Corrections: " << endl;
+
 	// Parse Document word by word
 	while (document_file >> document_word)
 	{
