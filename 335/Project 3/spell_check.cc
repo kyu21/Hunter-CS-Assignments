@@ -1,6 +1,7 @@
 // Kun Yu
 // Spring 2019 CS 335
 // Assignment 3 Part 3
+// Spell checker using double hashing
 
 #include "double_probing.h"
 #include <iostream>
