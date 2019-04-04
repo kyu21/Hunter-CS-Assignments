@@ -1,3 +1,7 @@
+// Kun Yu
+// Spring 2019 CS 335
+// Provided file that implements hashing through quadratic probing
+
 #ifndef QUADRATIC_PROBING_H
 #define QUADRATIC_PROBING_H
 

@@ -1,3 +1,7 @@
+// Kun Yu
+// Spring 2019 CS 335
+// Modified quadratic file that implements hashing through linear probing
+
 #ifndef LINEAR_PROBING_H
 #define LINEAR_PROBING_H
 

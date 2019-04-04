@@ -13,18 +13,21 @@ string RemovePunctuation(const string &word, bool &hasApostrophe)
 {
 	string new_word = "";
 
-	for (auto l : word)
+	// Goes through each characte in word and parses only alphabet and hyphen
+	for (auto &l : word)
 	{
+		// if word has an apostrophe, set flag and return original word
 		if (l == '\'')
 		{
 			hasApostrophe = true;
 			return word;
 		}
 
-		l = tolower(l);
-		if (((l >= 'a') && (l <= 'z')) || l == '-')
+		// checks if letter is lowercase alphabet or hyphen, attaches to new word if it is
+		auto ll = tolower(l);
+		if (((ll >= 'a') && (ll <= 'z')) || ll == '-')
 		{
-			new_word += l;
+			new_word += ll;
 		}
 	}
 
@@ -92,9 +95,11 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 			continue;
 		}
 
+		// Checks for possible mispellings if dictionary doesn't contain word
 		if (!(hash_table.Contains(word_to_lookup)))
 		{
 			string changed_word = word_to_lookup;
+
 			// Case 1 - Adding one character in each possible position
 			for (size_t i = 0; i < word_to_lookup.length() + 1; ++i)
 			{
@@ -151,11 +156,12 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 		// Remove duplicate alternative spellings
 		candidates.erase(unique(candidates.begin(), candidates.end()), candidates.end());
 
+		// If there were any candidate corrections, print them out
 		if (candidates.size() > 0)
 		{
 			// Prints list of candidate corrections
 			cout << word_to_lookup << " -> ";
-			for (auto word : candidates)
+			for (auto &word : candidates)
 			{
 				cout << "(" << word << ") ";
 			}
@@ -182,5 +188,6 @@ int main(int argc, char **argv)
 	// Call functions implementing the assignment requirements.
 	HashTableDouble<string> double_probing_table;
 	SpellChecker(double_probing_table, document_filename, dictionary_filename);
+
 	return 0;
 }

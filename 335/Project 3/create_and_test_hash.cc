@@ -1,6 +1,7 @@
 // Kun Yu
 // Spring CSCI 335
-// Assignment 3
+// Assignment 3 Part 1 & 2
+// Main Driver File for generating and testing various probing methods for hash tables
 
 #include "linear_probing.h"
 #include "quadratic_probing.h"

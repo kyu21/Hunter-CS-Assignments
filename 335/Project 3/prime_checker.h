@@ -1,3 +1,7 @@
+// Kun Yu
+// Spring 2019 CS 335
+// Utililty functions for prime checking refactored out of probing files
+
 #ifndef PRIME_CHECKER_H
 #define PRIME_CHECKER_H
 

@@ -1,3 +1,8 @@
+// Kun Yu
+// Spring 2019 CS 335
+// Modified quadratic file that implements hashing through double probing
+// using a second hash of R - (x mod R) where R is 89.
+
 #ifndef DOUBLE_PROBING_H
 #define DOUBLE_PROBING_H
 
@@ -163,6 +168,7 @@ class HashTableDouble
         return hf(x) % array_.size();
     }
 
+    // Double hashing function
     size_t InternalHashDouble(const HashedObj &x) const
     {
         static std::hash<HashedObj> hf;
