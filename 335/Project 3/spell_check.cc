@@ -34,6 +34,17 @@ string RemovePunctuation(const string &word, bool &hasApostrophe)
 	return new_word;
 }
 
+// bool ContainsWord(const string &word, const vector<string> &words) 
+// {
+// 	for (auto w : words) {
+// 		if (w == word) {
+// 			return true;
+// 		}
+// 	}
+
+// 	return false;
+// }
+
 template <typename HashTableType>
 void SpellChecker(HashTableType &hash_table, const string &document_filename, const string &dictionary_filename)
 {
@@ -71,6 +82,8 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 
 	cout << "\nPossible Misspelled Words with Candidate Corrections: " << endl;
 
+	// vector<string> corrected_words;
+
 	// Parse Document word by word
 	while (document_file >> document_word)
 	{
@@ -78,6 +91,11 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 		string word_to_lookup = RemovePunctuation(document_word, hasApostrophe);
 
 		vector<string> candidates;
+
+		// if (ContainsWord(word_to_lookup, corrected_words)) 
+		// {
+		// 	continue;
+		// }
 
 		// Skips word if it has an apostrophe
 		if (hasApostrophe)
@@ -169,6 +187,8 @@ void SpellChecker(HashTableType &hash_table, const string &document_filename, co
 			}
 			cout << endl;
 		}
+
+		// corrected_words.push_back(word_to_lookup);
 	} // end while loop
 }
 
