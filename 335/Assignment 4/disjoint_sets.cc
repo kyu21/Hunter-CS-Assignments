@@ -55,3 +55,17 @@ int DisjSets::find( int x )
         return s[ x ] = find( s[ x ] );
 }
 
+
+
+bool DisjSets::hasOneSet() const {
+    int numRoots = 0;
+    for (auto &x : s) {
+        if(x < 0) {
+            numRoots++;
+        }
+        if (numRoots > 1) {
+            return false;
+        }
+    }
+    return true;
+}

@@ -9,7 +9,11 @@
 #include <cstdlib>
 #include <unordered_map>
 #include <map>
+#include <queue>
 #include <list>
+#include <limits>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -30,6 +34,15 @@ class Graph {
 		double getWeight(const int &from, const int &to) const;
 		bool isVertexExist(const int &v) const;
 		bool isAdjacent(const int &v1, const int &v2) const;
+		double getDistance(const int &v);
+		int getOutdegree(const int &v) const;
+
+		// dijkstra
+		void performDijkstra(const int &start);
+		void printPath(const int &v);
+
+		// Random Graph
+		void makeAndTestRandomGraph(const int &numNodes);
 
 		// helper functions
 		void printGraph() const;
@@ -37,9 +50,16 @@ class Graph {
 	private:
 		struct vertex {
 			int value;
-			double weight;
+			double distance;
 			unordered_map<int, double> adj_list;
-			vertex(int num): value(num) {};
+
+			bool known; //dijkstra
+			vertex* next; //dijkstra
+
+			int outdegree = 0; //Part 3
+
+			vertex() : next(nullptr) {}
+			vertex(int num) : value(num), next(nullptr) {}
 		};
 		map<const int, vertex> vertices_;
 };

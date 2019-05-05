@@ -27,6 +27,7 @@ class DisjSets
     int find( int x ) const;
     int find( int x );
     void unionSets( int root1, int root2 );
+    bool hasOneSet() const;
 
   private:
     vector<int> s;
