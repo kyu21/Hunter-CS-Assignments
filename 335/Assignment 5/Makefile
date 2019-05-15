@@ -3,7 +3,7 @@
 ## Makefile
 ## LINUX compilation
 ##
-##############################################
+########################################
 
 #FLAGS
 C++FLAG = -g -std=c++11 -Wall
@@ -13,8 +13,8 @@ MATH_LIBS = -lm
 EXEC_DIR=.
 
 #Rule for .cpp files
-# .SUFFIXES : .cc.o
-.cc.o:
+# .SUFFIXES : .cpp.o
+.cpp.o:
 	g++ $(C++FLAG) $(INCLUDES)  -c $< -o $@
 
 #Including
@@ -34,6 +34,4 @@ all:
 
 #Clean obj files
 clean:
-	(rm -f *.o; rm -f $(PROGRAM_0))
-
-(:
+	rm -f *.o; rm -f $(PROGRAM_0);
