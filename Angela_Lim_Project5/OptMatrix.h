@@ -5,6 +5,7 @@
 #ifndef OPTMATRIX_H
 #define OPTMATRIX_H
 
+#include <limits>
 #include "PrintOptimalParenthesis.h"
 using namespace std;
 
@@ -24,7 +25,7 @@ int OptMatrix( const vector<int> & c, int n )
     for(int length = 2; length < n; length++){
       for(int i = 1; i < n-length+1; i++){
         int j = i + length - 1;
-        matrix[i][j] = INT_MAX;
+        matrix[i][j] = std::numeric_limits<int>::max();
         for(int k = i; k <= j - 1; k++){
             //q is cost per scalar multiplication
           int q = matrix[i][k] + matrix[k+1][j] + c[i-1] * c[k] * c[j];
